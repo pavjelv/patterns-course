@@ -5,9 +5,15 @@ import geometry.IPoint;
 
 public abstract class VisualCurve implements ICurve, IDrawable {
     private ICurve curve;
+    Integer numberOfPoints;
 
-    public VisualCurve(ICurve curve) {
+    public VisualCurve(ICurve curve, Integer numberOfPoints) {
         this.curve = curve;
+        this.numberOfPoints = numberOfPoints;
+    }
+
+    protected Integer getNumberOfPoints() {
+        return numberOfPoints;
     }
 
     @Override
