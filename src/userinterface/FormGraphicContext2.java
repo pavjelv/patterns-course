@@ -40,8 +40,4 @@ public class FormGraphicContext2 implements IGraphicContext {
         graphicsContext.setLineDashes(2d);
         graphicsContext.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
     }
-
-    @Override
-    public void save(IDrawable drawable) {
-    }
 }

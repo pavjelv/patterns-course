@@ -17,12 +17,12 @@ import javafx.scene.control.Separator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import userinterface.FormGraphicContext;
-import userinterface.FormGraphicContext2;
-import userinterface.VisualBezier;
-import userinterface.VisualLine;
+import userinterface.*;
+import visual.IDrawable;
 import visual.IGraphicContext;
 import visual.VisualCurve;
+
+import java.io.*;
 
 public class Main extends Application {
 
@@ -40,6 +40,7 @@ public class Main extends Application {
 
         IGraphicContext graphicContext = new FormGraphicContext(gc);
         IGraphicContext graphicContext2 = new FormGraphicContext2(gc2);
+        SVGGraphicsContent svgGraphicContent = new SVGGraphicsContent();
 
         Bezier bezier = new Bezier(
                 new Point(10.0, 10.0),
@@ -63,20 +64,25 @@ public class Main extends Application {
         EventHandler<MouseEvent> eventHandler1 = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                graphicContext.save(bezierCurve);
+                try {
+                    FileWriter myWriter = new FileWriter("D:/filename.svg");
+                    bezierCurve.draw(svgGraphicContent);
+                    svgGraphicContent.write(myWriter);
+                    myWriter.close();
+                } catch (IOException ex) {}
             }
         };
         saveToSVG.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler1);
 
-        Button saveToSVG2 = new Button("Save to SVG 2");
-        saveToSVG2.setDisable(true);
-        EventHandler<MouseEvent> eventHandler2 = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                graphicContext2.save(bezierCurve);
-            }
-        };
-        saveToSVG2.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler2);
+//        Button saveToSVG2 = new Button("Save to SVG 2");
+//        saveToSVG2.setDisable(true);
+//        EventHandler<MouseEvent> eventHandler2 = new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent e) {
+//                graphicContext2.save(bezierCurve);
+//            }
+//        };
+//        saveToSVG2.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler2);
 
         GridPane pane = new GridPane();
 
@@ -87,7 +93,7 @@ public class Main extends Application {
         pane.add(getSeparator(), 4, 0);
 
         pane.add(saveToSVG, 1, 1);
-        pane.add(saveToSVG2, 3, 1);
+//        pane.add(saveToSVG2, 3, 1);
 
         pane.add(getHorisontalSeparator(), 1, 2);
         pane.add(getHorisontalSeparator(), 3, 2);

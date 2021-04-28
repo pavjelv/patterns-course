@@ -3,42 +3,13 @@ package userinterface;
 import geometry.IPoint;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import visual.IDrawable;
 import visual.IGraphicContext;
 
 public class FormGraphicContext implements IGraphicContext {
-    GraphicContextWrapper wrapper;
-
-    private interface GraphicContextWrapper {
-        void fillOval(double x, double y, double w, double h);
-        void setStroke(Paint p);
-        void strokeLine(double x1, double y1, double x2, double y2);
-        void setFill(Color color);
-    }
+    GraphicsContext wrapper;
 
     public FormGraphicContext(final GraphicsContext gc) {
-        this.wrapper = new GraphicContextWrapper() {
-            @Override
-            public void fillOval(double x, double y, double w, double h) {
-                gc.fillOval(x, y, w, h);
-            }
-
-            @Override
-            public void setStroke(Paint p) {
-                gc.setStroke(p);
-            }
-
-            @Override
-            public void strokeLine(double x1, double y1, double x2, double y2) {
-                gc.strokeLine(x1, y1, x2, y2);
-            }
-
-            @Override
-            public void setFill(Color color) {
-                gc.setFill(color);
-            }
-        };
+        this.wrapper = gc;
         initGraphics();
     }
 
@@ -67,28 +38,5 @@ public class FormGraphicContext implements IGraphicContext {
     @Override
     public void visualizeSegment(IPoint p1, IPoint p2) {
         wrapper.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-    }
-
-    @Override
-    public void save(IDrawable drawable) {
-        GraphicContextWrapper oldWrapper = this.wrapper;
-        this.wrapper = new GraphicContextWrapper() {
-            @Override
-            public void fillOval(double x, double y, double w, double h) {
-                // fill to SVG file
-            }
-
-            @Override
-            public void setStroke(Paint p) { }
-
-            @Override
-            public void strokeLine(double x1, double y1, double x2, double y2) { }
-
-            @Override
-            public void setFill(Color color) { }
-        };
-        initGraphics();
-        drawable.draw(this);
-        this.wrapper = oldWrapper;
     }
 }
