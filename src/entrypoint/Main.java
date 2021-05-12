@@ -44,8 +44,6 @@ public class Main extends Application {
                 new Point(50.0, 200.0),
                 new Point(150.0, 20.0),
                 new Point(200.0, 100.0));
-        VisualCurve bezierFragment = new VisualBezier(new Fragment(bezier, 0.5, 1), 7);
-        VisualCurve bezierMoved = new VisualBezier(new MoveTo(bezier, new Point(0.0, 0.0)), 7);
         VisualCurve bezierCurve = new VisualBezier(bezier, 7);
 
         Button button = new Button("Generate");
@@ -53,10 +51,24 @@ public class Main extends Application {
             @Override
             public void handle(MouseEvent e) {
                 bezierCurve.draw(graphicContext);
-                bezierMoved.draw(graphicContext2);
+                bezierCurve.draw(graphicContext2);
             }
         };
         button.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+        VisualCurve bezierMoved = new VisualBezier(new MoveTo(new Fragment(bezier, 0.5, 1), new Point(200.0, 200.0)), 7);
+        VisualCurve bezierFragment = new VisualBezier(new Fragment(bezier, 0.5, 1), 7);
+        Button moveBtn = new Button("Move half of a curve to 200 200");
+        EventHandler<MouseEvent> moveEventHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                gc2.clearRect(0, 0, canvas2.getWidth(), canvas2.getHeight());
+                bezierMoved.draw(graphicContext);
+                bezierFragment.draw(graphicContext2);
+            }
+        };
+        moveBtn.addEventFilter(MouseEvent.MOUSE_CLICKED, moveEventHandler);
 
         Button saveToSVG = new Button("Save to SVG");
         saveToSVG.setDisable(true);
@@ -92,7 +104,7 @@ public class Main extends Application {
         pane.add(getSeparator(), 4, 0);
 
         pane.add(saveToSVG, 1, 1);
-//        pane.add(saveToSVG2, 3, 1);
+        pane.add(moveBtn, 3, 1);
 
         pane.add(getHorizontalSeparator(), 1, 2);
         pane.add(getHorizontalSeparator(), 3, 2);
