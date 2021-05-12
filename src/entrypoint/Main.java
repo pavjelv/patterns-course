@@ -1,9 +1,7 @@
 package entrypoint;
 
 import com.sun.org.apache.xpath.internal.operations.Or;
-import geometry.Bezier;
-import geometry.Line;
-import geometry.Point;
+import geometry.*;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -18,7 +16,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import userinterface.*;
-import visual.IDrawable;
 import visual.IGraphicContext;
 import visual.VisualCurve;
 
@@ -47,6 +44,8 @@ public class Main extends Application {
                 new Point(50.0, 200.0),
                 new Point(150.0, 20.0),
                 new Point(200.0, 100.0));
+        VisualCurve bezierFragment = new VisualBezier(new Fragment(bezier, 0.5, 1), 7);
+        VisualCurve bezierMoved = new VisualBezier(new MoveTo(bezier, new Point(0.0, 0.0)), 7);
         VisualCurve bezierCurve = new VisualBezier(bezier, 7);
 
         Button button = new Button("Generate");
@@ -54,7 +53,7 @@ public class Main extends Application {
             @Override
             public void handle(MouseEvent e) {
                 bezierCurve.draw(graphicContext);
-                bezierCurve.draw(graphicContext2);
+                bezierMoved.draw(graphicContext2);
             }
         };
         button.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -95,8 +94,8 @@ public class Main extends Application {
         pane.add(saveToSVG, 1, 1);
 //        pane.add(saveToSVG2, 3, 1);
 
-        pane.add(getHorisontalSeparator(), 1, 2);
-        pane.add(getHorisontalSeparator(), 3, 2);
+        pane.add(getHorizontalSeparator(), 1, 2);
+        pane.add(getHorizontalSeparator(), 3, 2);
 
         pane.add(button, 2, 3);
 
@@ -111,7 +110,7 @@ public class Main extends Application {
         return result;
     }
 
-    private Separator getHorisontalSeparator() {
+    private Separator getHorizontalSeparator() {
         Separator result = new Separator();
         result.setMinHeight(20);
         return result;

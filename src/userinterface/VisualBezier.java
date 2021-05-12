@@ -1,10 +1,10 @@
 package userinterface;
 
-import geometry.Bezier;
+import geometry.ICurve;
 import visual.VisualCurve;
 
 public class VisualBezier extends VisualCurve {
-    public VisualBezier(Bezier curve, Integer numberOfPoints) {
+    public VisualBezier(ICurve curve, Integer numberOfPoints) {
         super(curve, numberOfPoints);
     }
 }
