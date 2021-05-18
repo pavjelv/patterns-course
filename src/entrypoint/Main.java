@@ -19,7 +19,9 @@ import userinterface.*;
 import visual.IGraphicContext;
 import visual.VisualCurve;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class Main extends Application {
 
@@ -39,6 +41,8 @@ public class Main extends Application {
         IGraphicContext graphicContext2 = new FormGraphicContext2(gc2);
         SVGGraphicsContent svgGraphicContent = new SVGGraphicsContent();
 
+        Line line = new Line(new Point(100.0, 25.0), new Point(180.0, 110.0));
+
         Bezier bezier = new Bezier(
                 new Point(10.0, 10.0),
                 new Point(50.0, 200.0),
@@ -57,7 +61,6 @@ public class Main extends Application {
         button.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 
         VisualCurve bezierMoved = new VisualBezier(new MoveTo(new Fragment(bezier, 0.5, 1), new Point(200.0, 200.0)), 7);
-        VisualCurve bezierFragment = new VisualBezier(new Fragment(bezier, 0.5, 1), 7);
         Button moveBtn = new Button("Move half of a curve to 200 200");
         EventHandler<MouseEvent> moveEventHandler = new EventHandler<MouseEvent>() {
             @Override
@@ -65,7 +68,6 @@ public class Main extends Application {
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 gc2.clearRect(0, 0, canvas2.getWidth(), canvas2.getHeight());
                 bezierMoved.draw(graphicContext);
-                bezierFragment.draw(graphicContext2);
             }
         };
         moveBtn.addEventFilter(MouseEvent.MOUSE_CLICKED, moveEventHandler);
@@ -74,7 +76,7 @@ public class Main extends Application {
         saveToSVG.setDisable(true);
         EventHandler<MouseEvent> eventHandler1 = new EventHandler<MouseEvent>() {
             @Override
-            public void handle(MouseEvent e) {
+            public void handle(MouseEvent event) {
                 try {
                     FileWriter myWriter = new FileWriter("D:/filename.svg");
                     bezierCurve.draw(svgGraphicContent);
@@ -83,17 +85,37 @@ public class Main extends Application {
                 } catch (IOException ex) {}
             }
         };
-        saveToSVG.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler1);
 
-//        Button saveToSVG2 = new Button("Save to SVG 2");
-//        saveToSVG2.setDisable(true);
-//        EventHandler<MouseEvent> eventHandler2 = new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent e) {
-//                graphicContext2.save(bezierCurve);
-//            }
-//        };
-//        saveToSVG2.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler2);
+
+        VisualCurve bezierReverse = new VisualBezier(new Fragment(bezier, 1, 0), 7);
+        Button reverse = new Button("Reverse");
+        EventHandler<MouseEvent> eventHandler2 = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                gc2.clearRect(0, 0, canvas2.getWidth(), canvas2.getHeight());
+                bezierReverse.draw(graphicContext);
+            }
+        };
+        reverse.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler2);
+
+
+        ICurve c = new Fragment(bezier, 0, 0.5);
+        VisualCurve bezierHalf = new VisualBezier(c, 7);
+        VisualCurve lineHalf = new VisualLine(new MoveTo(new Fragment(line, 0.5, 1), c.getPoint(1.0)), 7);
+        Button append = new Button("Append");
+        EventHandler<MouseEvent> eventHandler3 = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                gc2.clearRect(0, 0, canvas2.getWidth(), canvas2.getHeight());
+                bezierHalf.draw(graphicContext);
+                lineHalf.draw(graphicContext);
+            }
+        };
+        append.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler3);
+
+
 
         GridPane pane = new GridPane();
 
@@ -103,7 +125,8 @@ public class Main extends Application {
         pane.add(canvas2, 3, 0);
         pane.add(getSeparator(), 4, 0);
 
-        pane.add(saveToSVG, 1, 1);
+        pane.add(append, 1, 1);
+        pane.add(reverse, 2, 1);
         pane.add(moveBtn, 3, 1);
 
         pane.add(getHorizontalSeparator(), 1, 2);
